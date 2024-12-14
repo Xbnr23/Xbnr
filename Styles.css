@@ -1,0 +1,37 @@
+body {
+    font-family: 'Tajawal', sans-serif;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-title {
+    color: #333;
+    font-weight: bold;
+}
+
+#orders .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+#orders .list-group-item p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.order-actions button {
+    margin-left: 5px;
+}
