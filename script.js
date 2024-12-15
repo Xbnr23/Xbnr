@@ -53,3 +53,36 @@ function editSubscription(index) {
 
     deleteSubscription(index);
 }
+const filterButton = document.getElementById('filter-expired');
+const showAllButton = document.getElementById('show-all');
+
+filterButton.addEventListener('click', () => {
+    const today = new Date().toISOString().split('T')[0]; // تاريخ اليوم بصيغة yyyy-mm-dd
+    const expiredSubscriptions = subscriptions.filter(sub => sub.endDate < today);
+
+    displayFilteredSubscriptions(expiredSubscriptions);
+});
+
+showAllButton.addEventListener('click', () => {
+    displaySubscriptions();
+});
+
+function displayFilteredSubscriptions(filteredSubscriptions) {
+    tableBody.innerHTML = '';
+    filteredSubscriptions.forEach((sub, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${sub.name}</td>
+            <td>${sub.phone}</td>
+            <td>${sub.price}</td>
+            <td>${sub.startDate}</td>
+            <td>${sub.endDate}</td>
+            <td>
+                <button class="edit" onclick="editSubscription(${index})">تعديل</button>
+                <button class="delete" onclick="deleteSubscription(${index})">حذف</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
