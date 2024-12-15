@@ -82,3 +82,23 @@ button.delete {
     background-color: #dc3545;
     color: #fff;
 }
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6c757d;
+    color: #fff;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #5a6268;
+}
+
