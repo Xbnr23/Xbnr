@@ -1,43 +1,23 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الاشتراكات</title>
+    <title>روبوت الدردشة بالصوت</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>إدارة الاشتراكات الشهرية</h1>
-        <form id="subscription-form">
-            <input type="text" id="name" placeholder="الاسم واللقب" required>
-            <input type="tel" id="phone" placeholder="رقم الهاتف" required>
-            <input type="number" id="price" placeholder="السعر (دج)" required>
-            <input type="date" id="start-date" placeholder="تاريخ بدء الاشتراك" required>
-            <input type="date" id="end-date" placeholder="تاريخ نهاية الاشتراك" required>
-            <button type="submit">إضافة الاشتراك</button>
-        </form>
-
-        <h2>قائمة الاشتراكات</h2>
-        <table id="subscription-table">
-            <thead>
-                <tr>
-                    <th>الاسم واللقب</th>
-                    <th>رقم الهاتف</th>
-                    <th>السعر</th>
-                    <th>تاريخ البداية</th>
-                    <th>تاريخ النهاية</th>
-                    <th>إجراءات</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+    <div class="chat-container">
+        <h1>روبوت الدردشة بالصوت</h1>
+        <div id="chat-box" class="chat-box">
+            <!-- الرسائل تظهر هنا -->
+        </div>
+        <div class="input-container">
+            <button id="mic-btn">🎤</button>
+            <input type="text" id="user-input" placeholder="اكتب أو تحدث...">
+            <button id="send-btn">إرسال</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-<div class="actions">
-    <button id="filter-expired">عرض المشتركين المنتهية اشتراكاتهم</button>
-    <button id="show-all">عرض كل المشتركين</button>
-</div>
-
