@@ -1,104 +1,72 @@
 body {
     font-family: Arial, sans-serif;
-    direction: rtl;
-    background-color: #f3f3f3;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
 }
 
-.container {
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
+.chat-container {
+    width: 400px;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-h1, h2 {
+h1 {
     text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    margin: 0;
+    padding: 15px;
+}
+
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-box .message {
+    margin: 10px 0;
+}
+
+.chat-box .user {
+    text-align: right;
+    color: #4CAF50;
+}
+
+.chat-box .bot {
+    text-align: left;
     color: #333;
 }
 
-form {
+.input-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    border-top: 1px solid #ddd;
 }
 
-form input, form button {
+#user-input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-form button {
-    background-color: #007bff;
-    color: #fff;
     border: none;
-    cursor: pointer;
+    outline: none;
 }
 
-form button:hover {
-    background-color: #0056b3;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th, table td {
+#send-btn {
     padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-table th {
-    background-color: #007bff;
-    color: #fff;
-}
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-button.edit, button.delete {
-    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
     border: none;
-    border-radius: 3px;
     cursor: pointer;
 }
 
-button.edit {
-    background-color: #28a745;
-    color: #fff;
+#send-btn:hover {
+    background-color: #45a049;
 }
-
-button.delete {
-    background-color: #dc3545;
-    color: #fff;
-}
-.actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.actions button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #6c757d;
-    color: #fff;
-    cursor: pointer;
-}
-
-.actions button:hover {
-    background-color: #5a6268;
-}
-
