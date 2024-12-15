@@ -1,88 +1,37 @@
-const form = document.getElementById('subscription-form');
-const tableBody = document.querySelector('#subscription-table tbody');
+// تعريف الردود المسبقة
+const botResponses = {
+    "السلام عليكم": "وعليكم السلام! كيف أقدر أساعدك؟",
+    "كيف حالك؟": "أنا بخير، شكراً! وأنت؟",
+    "ما هو اسمك؟": "أنا روبوت دردشة بسيط 😊.",
+    "شكراً": "على الرحب والسعة!",
+    "وداعاً": "إلى اللقاء!"
+};
 
-let subscriptions = [];
+// التعامل مع إرسال الرسائل
+const sendBtn = document.getElementById("send-btn");
+const userInput = document.getElementById("user-input");
+const chatBox = document.getElementById("chat-box");
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
-    const price = document.getElementById('price').value;
-    const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
-
-    const subscription = { name, phone, price, startDate, endDate };
-    subscriptions.push(subscription);
-
-    displaySubscriptions();
-    form.reset();
+sendBtn.addEventListener("click", () => {
+    const userMessage = userInput.value.trim();
+    if (userMessage) {
+        addMessage("user", userMessage);
+        getBotResponse(userMessage);
+        userInput.value = "";
+    }
 });
 
-function displaySubscriptions() {
-    tableBody.innerHTML = '';
-    subscriptions.forEach((sub, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${sub.name}</td>
-            <td>${sub.phone}</td>
-            <td>${sub.price}</td>
-            <td>${sub.startDate}</td>
-            <td>${sub.endDate}</td>
-            <td>
-                <button class="edit" onclick="editSubscription(${index})">تعديل</button>
-                <button class="delete" onclick="deleteSubscription(${index})">حذف</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
+function addMessage(sender, message) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${sender}`;
+    messageDiv.textContent = message;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function deleteSubscription(index) {
-    subscriptions.splice(index, 1);
-    displaySubscriptions();
+function getBotResponse(message) {
+    const response = botResponses[message] || "عذراً، لم أفهم سؤالك.";
+    setTimeout(() => {
+        addMessage("bot", response);
+    }, 500); // تأخير بسيط لتقليد الرد الطبيعي
 }
-
-function editSubscription(index) {
-    const sub = subscriptions[index];
-    document.getElementById('name').value = sub.name;
-    document.getElementById('phone').value = sub.phone;
-    document.getElementById('price').value = sub.price;
-    document.getElementById('start-date').value = sub.startDate;
-    document.getElementById('end-date').value = sub.endDate;
-
-    deleteSubscription(index);
-}
-const filterButton = document.getElementById('filter-expired');
-const showAllButton = document.getElementById('show-all');
-
-filterButton.addEventListener('click', () => {
-    const today = new Date().toISOString().split('T')[0]; // تاريخ اليوم بصيغة yyyy-mm-dd
-    const expiredSubscriptions = subscriptions.filter(sub => sub.endDate < today);
-
-    displayFilteredSubscriptions(expiredSubscriptions);
-});
-
-showAllButton.addEventListener('click', () => {
-    displaySubscriptions();
-});
-
-function displayFilteredSubscriptions(filteredSubscriptions) {
-    tableBody.innerHTML = '';
-    filteredSubscriptions.forEach((sub, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${sub.name}</td>
-            <td>${sub.phone}</td>
-            <td>${sub.price}</td>
-            <td>${sub.startDate}</td>
-            <td>${sub.endDate}</td>
-            <td>
-                <button class="edit" onclick="editSubscription(${index})">تعديل</button>
-                <button class="delete" onclick="deleteSubscription(${index})">حذف</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-
