@@ -1,75 +1,40 @@
-// تعريف الردود المسبقة
-const botResponses = {
-    "السلام عليكم": "وعليكم السلام! وش تحتاج؟",
-    "وش لحوال؟": "رحمة ربي، ونتا لباس؟",
-    "وش اسمك؟": "أنا روبوت دردشة بسيط 😊.",
-"شكراً": "على الرحب والسعة!",
-    "وداعاً": "إلى اللقاء!"
-       "حبيت نسوسلك": "تفظل",
+const video = document.getElementById('videoPlayer');
+const syncButton = document.getElementById('syncButton');
+
+// الاتصال بالخادم
+const socket = new WebSocket('ws://localhost:8080');
+
+// عند تشغيل الفيديو
+video.addEventListener('play', () => {
+  socket.send(JSON.stringify({ type: 'play', currentTime: video.currentTime }));
+});
+
+// عند إيقاف الفيديو
+video.addEventListener('pause', () => {
+  socket.send(JSON.stringify({ type: 'pause', currentTime: video.currentTime }));
+});
+
+// عند تغيير الوقت
+video.addEventListener('seeked', () => {
+  socket.send(JSON.stringify({ type: 'seek', currentTime: video.currentTime }));
+});
+
+// استقبال الرسائل من الخادم
+socket.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+
+  if (data.type === 'play') {
+    video.currentTime = data.currentTime;
+    video.play();
+  } else if (data.type === 'pause') {
+    video.currentTime = data.currentTime;
+    video.pause();
+  } else if (data.type === 'seek') {
+    video.currentTime = data.currentTime;
+  }
 };
 
-// المكونات الرئيسية
-const sendBtn = document.getElementById("send-btn");
-const micBtn = document.getElementById("mic-btn");
-const userInput = document.getElementById("user-input");
-const chatBox = document.getElementById("chat-box");
-
-// إرسال الرسائل
-sendBtn.addEventListener("click", () => {
-    const userMessage = userInput.value.trim();
-    if (userMessage) {
-        processMessage(userMessage);
-        userInput.value = "";
-    }
+// زر المزامنة
+syncButton.addEventListener('click', () => {
+  socket.send(JSON.stringify({ type: 'sync', currentTime: video.currentTime }));
 });
-
-// تشغيل الميكروفون
-micBtn.addEventListener("click", () => {
-    startSpeechRecognition();
-});
-
-function processMessage(message) {
-    addMessage("user", message);
-    getBotResponse(message);
-}
-
-function addMessage(sender, message) {
-    const messageDiv = document.createElement("div");
-    messageDiv.className = `message ${sender}`;
-    messageDiv.textContent = message;
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function getBotResponse(message) {
-    const response = botResponses[message] || "عذراً، لم أفهم سؤالك.";
-    setTimeout(() => {
-        addMessage("bot", response);
-        speak(response); // تحويل الرد إلى صوت
-    }, 500);
-}
-
-// تحويل النص إلى صوت
-function speak(text) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ar"; // اللغة العربية
-    speechSynthesis.speak(utterance);
-}
-
-// التعرف على الصوت
-function startSpeechRecognition() {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "ar"; // اللغة العربية
-
-    recognition.start();
-
-    recognition.onresult = (event) => {
-        const speechResult = event.results[0][0].transcript;
-        userInput.value = speechResult;
-        processMessage(speechResult);
-    };
-
-    recognition.onerror = (event) => {
-        console.error("حدث خطأ في التعرف على الصوت:", event.error);
-    };
-}
