@@ -1,23 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روبوت الدردشة بالصوت</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مشاهدة أفلام مع الأصدقاء</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="chat-container">
-        <h1>روبوت الدردشة بالصوت</h1>
-        <div id="chat-box" class="chat-box">
-            <!-- الرسائل تظهر هنا -->
-        </div>
-        <div class="input-container">
-            <button id="mic-btn">🎤</button>
-            <input type="text" id="user-input" placeholder="اكتب أو تحدث...">
-            <button id="send-btn">إرسال</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+  <div class="container">
+    <h1>مشاهدة فيلم مع صديقك</h1>
+    <video id="videoPlayer" width="600" controls>
+      <source src="movie.mp4" type="video/mp4">
+      المتصفح الخاص بك لا يدعم تشغيل الفيديو.
+    </video>
+    <button id="syncButton">مزامنة مع الصديق</button>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
