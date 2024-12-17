@@ -1,74 +1,119 @@
+/* تصميم عصري للصفحة */
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #00c6ff, #0072ff); /* خلفية متدرجة */
-    color: #ffffff; /* لون النص الافتراضي */
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298); /* خلفية متدرجة */
+    color: #fff;
     margin: 0;
     padding: 0;
-    direction: rtl;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     text-align: center;
+}
+
+/* الحاوية الرئيسية */
 .container {
-    max-width: 700px;
-    margin: 50px auto;
+    max-width: 600px;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.15); /* خلفية شفافة قليلاً */
     padding: 20px;
-    background: rgba(255, 255, 255, 0.9); /* خلفية شبه شفافة */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل حول الحاوية */
-    border-radius: 15px; /* زوايا منحنية */
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* ظل ناعم */
+    backdrop-filter: blur(10px); /* تأثير الضبابية */
+}
+
+/* العناوين */
+h1, h2 {
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+/* النموذج */
 form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 20px;
 }
 
 input, button {
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #0072ff;
+    border: none;
     border-radius: 8px;
     outline: none;
 }
 
-input:focus {
-    border-color: #00c6ff;
-    box-shadow: 0 0 5px rgba(0, 198, 255, 0.5);
+/* حقول الإدخال */
+input {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
 }
 
+input:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 8px rgba(0, 198, 255, 0.7);
+}
+
+/* زر الإضافة */
 button {
-    background-color: #0072ff;
-    color: #ffffff;
+    background: #00c6ff;
+    color: #fff;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056d4;
+    background: #0072ff;
     transform: scale(1.05);
+}
+
+/* قائمة المشتركين */
 #subscribers-list {
     margin-top: 20px;
-    text-align: left; /* عرض القائمة بمحاذاة */
+    text-align: left;
 }
 
 .subscriber {
     padding: 15px;
     margin-bottom: 15px;
-    background: #f4f4f4; /* خلفية افتراضية */
+    background: rgba(255, 255, 255, 0.9); /* خلفية بيضاء شبه شفافة */
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: transform 0.3s ease;
+    color: #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .subscriber:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
-    .subscriber button {
+
+/* تصميم الاشتراكات المنتهية */
+.expired {
+    background: rgba(255, 99, 71, 0.9); /* لون خلفية أحمر */
+    border: 2px solid #ff6347;
+    color: #fff;
+}
+
+.warning {
+    background: rgba(255, 223, 107, 0.9); /* لون خلفية أصفر */
+    border: 2px solid #ffc107;
+    color: #856404;
+}
+
+/* زر حذف */
+.subscriber button {
     padding: 8px 12px;
     background: #ff6b6b;
-    color: #ffffff;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -78,17 +123,4 @@ button:hover {
 .subscriber button:hover {
     background: #d9534f;
     transform: scale(1.1);
-}
-
-
-.expired {
-    background: #ffe5e9;
-    border: 2px solid #ff6b6b;
-    color: #ff6b6b;
-}
-
-.warning {
-    background: #fff4d1;
-    border: 2px solid #ffc107;
-    color: #856404;
 }
