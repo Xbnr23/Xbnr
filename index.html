@@ -3,17 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشاهدة أفلام مع الأصدقاء</title>
+  <title>مشاهدة أفلام مع طبوزتي</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>مشاهدة فيلم مع صديقك</h1>
-    <video id="videoPlayer" width="600" controls>
-      <source src="movie.mp4" type="video/mp4">
-      المتصفح الخاص بك لا يدعم تشغيل الفيديو.
-    </video>
-    <button id="syncButton">مزامنة مع الصديق</button>
+    <h1>مشاهدة فيلم مع طبوزتي</h1>
+    <div class="video-section">
+      <input type="text" id="videoURL" placeholder="أدخل رابط الفيلم هنا" />
+      <button id="loadVideoButton">تشغيل الفيلم</button>
+      <video id="videoPlayer" width="600" controls>
+        المتصفح الخاص بك لا يدعم تشغيل الفيديو.
+      </video>
+      <button id="syncButton">مزامنة مع الصديق</button>
+    </div>
+    <div class="chat-section">
+      <h2>الدردشة</h2>
+      <div id="chatBox" class="chat-box"></div>
+      <input type="text" id="chatInput" placeholder="أدخل رسالتك هنا" />
+      <button id="sendChatButton">إرسال</button>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
