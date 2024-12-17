@@ -53,13 +53,16 @@ button:hover {
     justify-content: space-between;
     align-items: center;
 }
-
 .expired {
-    background: #f8d7da;
-    border-color: #f5c6cb;
+    background: #f8d7da; /* اللون الخلفي */
+    border: 2px solid #dc3545; /* إطار أحمر */
+    border-radius: 5px; /* زوايا الإطار */
+    color: #721c24; /* نص أحمر داكن */
 }
 
 .warning {
-    background: #fff3cd;
-    border-color: #ffeeba;
+    background: #fff3cd; /* اللون الخلفي */
+    border: 2px solid #ffc107; /* إطار أصفر */
+    border-radius: 5px;
+    color: #856404; /* نص أصفر داكن */
 }
