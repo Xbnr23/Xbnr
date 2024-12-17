@@ -1,35 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشغل فيديو ودردشة</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة صالة رياضة</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- قسم الفيديو -->
-    <div class="video-section">
-      <video id="videoPlayer" controls>
-        <source src="video.mp4" type="video/mp4">
-        المتصفح تاعك ما يدعم الفيديو.
-      </video>
-      <div class="controls">
-        <button id="playPause">Play/Pause</button>
-        <button id="sync">Sync</button>
-      </div>
-    </div>
+    <div class="container">
+        <h1>إدارة صالة كمال الأجسام</h1>
 
-    <!-- قسم الدردشة -->
-    <div class="chat-section">
-      <h2>الدردشة</h2>
-      <div id="chatBox" class="chat-box"></div>
-      <div class="chat-input">
-        <input type="text" id="messageInput" placeholder="اكتب رسالة...">
-        <button id="sendButton">إرسال</button>
-      </div>
+        <!-- Form لإضافة مشترك جديد -->
+        <form id="subscriber-form">
+            <input type="text" id="firstName" placeholder="الاسم" required>
+            <input type="text" id="lastName" placeholder="اللقب" required>
+            <input type="tel" id="phone" placeholder="رقم الهاتف" required>
+            <input type="date" id="expiryDate" required>
+            <button type="submit">إضافة المشترك</button>
+        </form>
+
+        <!-- قائمة المشتركين -->
+        <h2>قائمة المشتركين</h2>
+        <div id="subscribers-list"></div>
     </div>
-  </div>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
