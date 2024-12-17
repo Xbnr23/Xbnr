@@ -4,6 +4,8 @@ const syncButton = document.getElementById('sync');
 const chatBox = document.getElementById('chatBox');
 const messageInput = document.getElementById('messageInput');
 const sendButton = document.getElementById('sendButton');
+const videoUrlInput = document.getElementById('videoUrl');
+const loadVideoButton = document.getElementById('loadVideo');
 
 // Play/Pause functionality
 playPauseButton.addEventListener('click', () => {
@@ -11,6 +13,17 @@ playPauseButton.addEventListener('click', () => {
     videoPlayer.play();
   } else {
     videoPlayer.pause();
+  }
+});
+
+// Load video from URL
+loadVideoButton.addEventListener('click', () => {
+  const videoUrl = videoUrlInput.value.trim();
+  if (videoUrl) {
+    videoPlayer.src = videoUrl;
+    videoPlayer.play();
+  } else {
+    alert('يرجى إدخال رابط فيديو صالح.');
   }
 });
 
