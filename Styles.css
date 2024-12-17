@@ -1,68 +1,94 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    direction: rtl;
-    text-align: center;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #00c6ff, #0072ff); /* خلفية متدرجة */
+    color: #ffffff; /* لون النص الافتراضي */
     margin: 0;
     padding: 0;
-}
-
+    direction: rtl;
+    text-align: center;
 .container {
-    max-width: 600px;
-    margin: 20px auto;
+    max-width: 700px;
+    margin: 50px auto;
     padding: 20px;
-    background: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-h1, h2 {
-    color: #333;
-}
-
+    background: rgba(255, 255, 255, 0.9); /* خلفية شبه شفافة */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل حول الحاوية */
+    border-radius: 15px; /* زوايا منحنية */
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 20px;
 }
 
 input, button {
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
+    border: 1px solid #0072ff;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #00c6ff;
+    box-shadow: 0 0 5px rgba(0, 198, 255, 0.5);
 }
 
 button {
-    background-color: #28a745;
-    color: white;
-    border: none;
+    background-color: #0072ff;
+    color: #ffffff;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #0056d4;
+    transform: scale(1.05);
+#subscribers-list {
+    margin-top: 20px;
+    text-align: left; /* عرض القائمة بمحاذاة */
 }
 
 .subscriber {
-    padding: 10px;
-    margin: 10px 0;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f4f4f4; /* خلفية افتراضية */
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: transform 0.3s ease;
 }
+
+.subscriber:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+    .subscriber button {
+    padding: 8px 12px;
+    background: #ff6b6b;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.subscriber button:hover {
+    background: #d9534f;
+    transform: scale(1.1);
+}
+
+
 .expired {
-    background: #f8d7da; /* اللون الخلفي */
-    border: 2px solid #dc3545; /* إطار أحمر */
-    border-radius: 5px; /* زوايا الإطار */
-    color: #721c24; /* نص أحمر داكن */
+    background: #ffe5e9;
+    border: 2px solid #ff6b6b;
+    color: #ff6b6b;
 }
 
 .warning {
-    background: #fff3cd; /* اللون الخلفي */
-    border: 2px solid #ffc107; /* إطار أصفر */
-    border-radius: 5px;
-    color: #856404; /* نص أصفر داكن */
+    background: #fff4d1;
+    border: 2px solid #ffc107;
+    color: #856404;
 }
