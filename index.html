@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشاهدة أفلام مع طبوزتي</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>مشغل فيديو ودردشة</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>مشاهدة فيلم مع طبوزتي</h1>
+    <!-- قسم الفيديو -->
     <div class="video-section">
-      <input type="text" id="videoURL" placeholder="أدخل رابط الفيلم هنا" />
-      <button id="loadVideoButton">تشغيل الفيلم</button>
-      <video id="videoPlayer" width="600" controls>
-        المتصفح الخاص بك لا يدعم تشغيل الفيديو.
+      <video id="videoPlayer" controls>
+        <source src="video.mp4" type="video/mp4">
+        المتصفح تاعك ما يدعم الفيديو.
       </video>
-      <button id="syncButton">مزامنة مع الصديق</button>
+      <div class="controls">
+        <button id="playPause">Play/Pause</button>
+        <button id="sync">Sync</button>
+      </div>
     </div>
+
+    <!-- قسم الدردشة -->
     <div class="chat-section">
       <h2>الدردشة</h2>
       <div id="chatBox" class="chat-box"></div>
-      <input type="text" id="chatInput" placeholder="أدخل رسالتك هنا" />
-      <button id="sendChatButton">إرسال</button>
+      <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="اكتب رسالة...">
+        <button id="sendButton">إرسال</button>
+      </div>
     </div>
   </div>
   <script src="script.js"></script>
