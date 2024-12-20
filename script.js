@@ -32,4 +32,9 @@ function displaySubscribers() {
 
         subscribersList.appendChild(div);
     });
-}
+    
+}localStorage.setItem("key", "value");
+let value = localStorage.getItem("key");
+console.log(value); // ستظهر القيمة المحفوظة
+localStorage.removeItem("key");
+
