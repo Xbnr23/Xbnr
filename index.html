@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المشتركين</title>
+</head>
+<body>
+    <h1>إدارة المشتركين</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>اللقب</th>
+                <th>رقم الهاتف</th>
+                <th>تاريخ البدء</th>
+                <th>تاريخ النهاية</th>
+                <th>الحالة</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sub in subscribers %}
+            <tr>
+                <td>{{ sub.name }}</td>
+                <td>{{ sub.surname }}</td>
+                <td>{{ sub.phone }}</td>
+                <td>{{ sub.start_date }}</td>
+                <td>{{ sub.end_date }}</td>
+                <td>{{ sub.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/add">إضافة مشترك جديد</a>
+</body>
+</html>
