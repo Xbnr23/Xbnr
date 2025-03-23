@@ -1,586 +1,1923 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام إدارة المشتركين</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
-<script>
-tailwind.config = {
-theme: {
-extend: {
-colors: {
-primary: '#2563eb',
-secondary: '#64748b'
-},
-borderRadius: {
-'none': '0px',
-'sm': '4px',
-DEFAULT: '8px',
-'md': '12px',
-'lg': '16px',
-'xl': '20px',
-'2xl': '24px',
-'3xl': '32px',
-'full': '9999px',
-'button': '8px'
-}
-}
-}
-}
-</script>
-<style>
-:where([class^="ri-"])::before { content: "\f3c2"; }
-@font-face {
-font-family: 'Cairo';
-src: url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
-}
-body {
-font-family: 'Cairo', sans-serif;
-}
-.hide-arrows::-webkit-inner-spin-button,
-.hide-arrows::-webkit-outer-spin-button {
--webkit-appearance: none;
-margin: 0;
-}
-</style>
-</head>
-<body class="bg-gray-50">
-<div id="app" class="min-h-screen">
-<div id="loginPage" class="min-h-screen flex items-center justify-center bg-gray-50">
-<div class="bg-white p-8 rounded-lg shadow-lg w-96">
-<div class="text-center mb-8">
-<h1 class="font-['Pacifico'] text-3xl text-primary">logo</h1>
-<p class="mt-2 text-gray-600">نظام إدارة المشتركين</p>
-</div>
-<form id="loginForm" class="space-y-6">
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">اسم المستخدم</label>
-<div class="relative">
-<div class="absolute inset-y-0 right-0 flex items-center pr-3">
-<i class="ri-user-line text-gray-400"></i>
-</div>
-<input type="text" class="block w-full pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
-<div class="relative">
-<div class="absolute inset-y-0 right-0 flex items-center pr-3">
-<i class="ri-lock-line text-gray-400"></i>
-</div>
-<input type="password" class="block w-full pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-</div>
-<button type="submit" class="w-full bg-primary text-white py-2 rounded-button hover:bg-primary/90 transition-colors cursor-pointer !rounded-button whitespace-nowrap">تسجيل الدخول</button>
-<div class="text-center">
-<a href="#" class="text-sm text-primary hover:underline">نسيت كلمة المرور؟</a>
-</div>
-</form>
-</div>
-</div>
-<div id="dashboard" class="hidden">
-<nav class="bg-white shadow-sm">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between h-16">
-<div class="flex items-center">
-<h1 class="font-['Pacifico'] text-2xl text-primary">logo</h1>
-</div>
-<div class="flex items-center space-x-4 space-x-reverse">
-<button id="syncBtn" class="text-gray-600 hover:text-primary transition-colors cursor-pointer">
-<i class="ri-refresh-line ri-lg"></i>
-</button>
-<div class="relative">
-<button id="userMenuBtn" class="flex items-center space-x-3 space-x-reverse">
-<span class="text-gray-700">XBNR</span>
-<i class="ri-user-line text-gray-600"></i>
-</button>
-<div id="userMenu" class="hidden absolute left-0 mt-2 w-48 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-<div class="py-1">
-<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 space-x-reverse" onclick="showProfileModal()">
-<i class="ri-user-settings-line"></i>
-<span>تعديل الملف الشخصي</span>
-</a>
-<a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 space-x-reverse" onclick="showPasswordModal()">
-<i class="ri-lock-password-line"></i>
-<span>تغيير كلمة المرور</span>
-</a>
-<hr class="my-1 border-gray-200">
-<a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2 space-x-reverse" onclick="logout()">
-<i class="ri-logout-box-line"></i>
-<span>تسجيل الخروج</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</nav>
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-<div class="bg-white rounded-lg shadow p-6">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-sm text-gray-600">إجمالي المشتركين</p>
-<h3 class="text-2xl font-semibold text-gray-900">125</h3>
-</div>
-<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-<i class="ri-team-line text-primary ri-xl"></i>
-</div>
-</div>
-</div>
-<div class="bg-white rounded-lg shadow p-6">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-sm text-gray-600">المشتركون النشطون</p>
-<h3 class="text-2xl font-semibold text-gray-900">87</h3>
-</div>
-<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-<i class="ri-user-follow-line text-green-600 ri-xl"></i>
-</div>
-</div>
-</div>
-<div class="bg-white rounded-lg shadow p-6">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-sm text-gray-600">الاشتراكات المنتهية</p>
-<h3 class="text-2xl font-semibold text-gray-900">38</h3>
-</div>
-<div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-<i class="ri-user-unfollow-line text-red-600 ri-xl"></i>
-</div>
-</div>
-</div>
-<div class="bg-white rounded-lg shadow p-6">
-<div class="flex items-center justify-between">
-<div>
-<p class="text-sm text-gray-600">قرب انتهاء الاشتراك</p>
-<h3 class="text-2xl font-semibold text-gray-900">5</h3>
-</div>
-<div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-<i class="ri-timer-line text-yellow-600 ri-xl"></i>
-</div>
-</div>
-</div>
-</div>
-<div class="bg-white rounded-lg shadow">
-<div class="p-6 border-b border-gray-200">
-<div class="flex flex-wrap items-center justify-between gap-4">
-<div class="flex-1">
-<div class="relative">
-<div class="absolute inset-y-0 right-0 flex items-center pr-3">
-<i class="ri-search-line text-gray-400"></i>
-</div>
-<input type="text" placeholder="بحث عن مشترك..." class="block w-full pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary">
-</div>
-</div>
-<div class="flex items-center space-x-4 space-x-reverse">
-<select class="pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary">
-<option value="all">جميع المشتركين</option>
-<option value="active">النشطون</option>
-<option value="expired">المنتهية اشتراكاتهم</option>
-</select>
-<button id="addSubscriberBtn" class="bg-primary text-white px-4 py-2 rounded-button hover:bg-primary/90 transition-colors flex items-center space-x-2 space-x-reverse cursor-pointer !rounded-button whitespace-nowrap">
-<i class="ri-add-line"></i>
-<span>إضافة مشترك</span>
-</button>
-</div>
-</div>
-</div>
-<div class="overflow-x-auto">
-<table class="min-w-full divide-y divide-gray-200">
-<thead class="bg-gray-50">
-<tr>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الاسم</th>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم الهاتف</th>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ البداية</th>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ النهاية</th>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ</th>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
-<th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
-</tr>
-</thead>
-<tbody class="bg-white divide-y divide-gray-200">
-<tr>
-<td class="px-6 py-4 whitespace-nowrap">عبد الرحمن العمري</td>
-<td class="px-6 py-4 whitespace-nowrap">0501234567</td>
-<td class="px-6 py-4 whitespace-nowrap">2025/01/01</td>
-<td class="px-6 py-4 whitespace-nowrap">2025/12/31</td>
-<td class="px-6 py-4 whitespace-nowrap">1200 دينار جزائري</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">نشط</span>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-<div class="flex space-x-2 space-x-reverse">
-<button class="text-blue-600 hover:text-blue-900 cursor-pointer">
-<i class="ri-edit-line ri-lg"></i>
-</button>
-<button class="text-red-600 hover:text-red-900 cursor-pointer" onclick="showDeleteConfirmation(this)">
-<i class="ri-delete-bin-line ri-lg"></i>
-</button>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</main>
-</div>
-<div id="addSubscriberModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-<div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-<div class="px-6 py-4 border-b border-gray-200">
-<h3 class="text-lg font-medium text-gray-900">إضافة مشترك جديد</h3>
-</div>
-<form id="subscriberForm" class="p-6 space-y-4">
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
-<input type="text" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">اللقب</label>
-<input type="text" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
-<input type="tel" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary hide-arrows" required>
-</div>
-<div class="grid grid-cols-2 gap-4">
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">تاريخ البداية</label>
-<input type="date" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">تاريخ النهاية</label>
-<input type="date" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">المبلغ</label>
-<input type="number" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary hide-arrows" required>
-</div>
-<div class="flex justify-end space-x-3 space-x-reverse pt-4">
-<button type="button" class="px-4 py-2 border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 cursor-pointer !rounded-button whitespace-nowrap" onclick="closeModal()">إلغاء</button>
-<button type="submit" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 cursor-pointer !rounded-button whitespace-nowrap">حفظ</button>
-</div>
-</form>
-</div>
-</div>
-</div>
-<div id="profileModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-<div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-<div class="px-6 py-4 border-b border-gray-200">
-<h3 class="text-lg font-medium text-gray-900">تعديل الملف الشخصي</h3>
-</div>
-<form id="profileForm" class="p-6 space-y-4">
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
-<input type="text" id="profileName" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">البريد الإلكتروني</label>
-<input type="email" id="profileEmail" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div class="flex justify-end space-x-3 space-x-reverse pt-4">
-<button type="button" class="px-4 py-2 border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 cursor-pointer !rounded-button whitespace-nowrap" onclick="closeProfileModal()">إلغاء</button>
-<button type="submit" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 cursor-pointer !rounded-button whitespace-nowrap">حفظ</button>
-</div>
-</form>
-</div>
-</div>
-<div id="passwordModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-<div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-<div class="px-6 py-4 border-b border-gray-200">
-<h3 class="text-lg font-medium text-gray-900">تغيير كلمة المرور</h3>
-</div>
-<form id="passwordForm" class="p-6 space-y-4">
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور الحالية</label>
-<input type="password" id="currentPassword" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور الجديدة</label>
-<input type="password" id="newPassword" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 mb-1">تأكيد كلمة المرور الجديدة</label>
-<input type="password" id="confirmPassword" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
-</div>
-<div class="flex justify-end space-x-3 space-x-reverse pt-4">
-<button type="button" class="px-4 py-2 border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 cursor-pointer !rounded-button whitespace-nowrap" onclick="closePasswordModal()">إلغاء</button>
-<button type="submit" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90 cursor-pointer !rounded-button whitespace-nowrap">حفظ</button>
-</div>
-</form>
-</div>
-</div>
-<div id="deleteConfirmModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-<div class="bg-white rounded-lg shadow-xl max-w-sm w-full mx-4">
-<div class="px-6 py-4">
-<h3 class="text-lg font-medium text-gray-900 mb-4">هل أنت متأكد من حذف هذا المشترك؟</h3>
-<div class="flex justify-end space-x-3 space-x-reverse">
-<button type="button" class="px-4 py-2 border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 cursor-pointer !rounded-button whitespace-nowrap" onclick="closeDeleteConfirmation()">إلغاء</button>
-<button type="button" class="px-4 py-2 bg-red-600 text-white rounded-button hover:bg-red-700 cursor-pointer !rounded-button whitespace-nowrap" onclick="confirmDelete()">تأكيد الحذف</button>
-</div>
-</div>
-</div>
-</div>
-<script>
-const mockData = {
-subscribers: [
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XBNR-GYM | نظام إدارة المشتركين</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --primary-light: #60a5fa;
+      --secondary: #64748b;
+      --accent: #f97316;
+      --accent-dark: #ea580c;
+      --red: #ef4444;
+      --red-hover: #dc2626;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --border-radius: 10px;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
 
-]
-};
-function saveToLocalStorage() {
-localStorage.setItem('subscriberData', JSON.stringify(mockData));
-}
-function loadFromLocalStorage() {
-const data = localStorage.getItem('subscriberData');
-if(data) {
-mockData.subscribers = JSON.parse(data).subscribers;
-renderSubscribers();
-}
-}
-function renderSubscribers() {
-const tbody = document.querySelector('tbody');
-tbody.innerHTML = '';
-mockData.subscribers.forEach(sub => {
-const tr = document.createElement('tr');
-tr.dataset.id = sub.id;
-const endDate = new Date(sub.endDate);
-const today = new Date();
-const diffDays = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-const isNearExpiry = sub.status === 'active' && diffDays <= 30 && diffDays > 0;
-tr.innerHTML = `
-<td class="px-6 py-4 whitespace-nowrap">${sub.name}</td>
-<td class="px-6 py-4 whitespace-nowrap">${sub.phone}</td>
-<td class="px-6 py-4 whitespace-nowrap">${sub.startDate}</td>
-<td class="px-6 py-4 whitespace-nowrap ${isNearExpiry ? 'text-yellow-600 font-medium' : ''}">${sub.endDate}${isNearExpiry ? ` (متبقي ${diffDays} يوم)` : ''}</td>
-<td class="px-6 py-4 whitespace-nowrap">${sub.amount} دينار جزائري</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-  sub.status === 'active' 
-    ? isNearExpiry 
-      ? 'bg-yellow-100 text-yellow-800'
-      : 'bg-green-100 text-green-800' 
-    : 'bg-red-100 text-red-800'
-}">${sub.status === 'active' ? (isNearExpiry ? 'قرب الانتهاء' : 'نشط') : 'منتهي'}</span>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-<div class="flex space-x-2 space-x-reverse">
-<button class="text-blue-600 hover:text-blue-900 cursor-pointer">
-<i class="ri-edit-line ri-lg"></i>
-</button>
-<button class="text-red-600 hover:text-red-900 cursor-pointer" onclick="showDeleteConfirmation(this)">
-<i class="ri-delete-bin-line ri-lg"></i>
-</button>
-</div>
-</td>
-`;
-tbody.appendChild(tr);
-});
-updateStats();
-}
-function updateStats() {
-const total = mockData.subscribers.length;
-const active = mockData.subscribers.filter(s => s.status === 'active').length;
-const expired = mockData.subscribers.filter(s => s.status === 'expired').length;
-const nearExpiry = mockData.subscribers.filter(s => {
-  if(s.status === 'active') {
-    const endDate = new Date(s.endDate);
-    const today = new Date();
-    const diffDays = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-    return diffDays <= 30 && diffDays > 0;
-  }
-  return false;
-}).length;
-document.querySelector('.text-2xl.font-semibold').textContent = total;
-document.querySelectorAll('.text-2xl.font-semibold')[1].textContent = active;
-document.querySelectorAll('.text-2xl.font-semibold')[2].textContent = expired;
-document.querySelectorAll('.text-2xl.font-semibold')[3].textContent = nearExpiry;
-}
-let currentDeleteRow = null;
-function showDeleteConfirmation(button) {
-currentDeleteRow = button.closest('tr');
-document.getElementById('deleteConfirmModal').classList.remove('hidden');
-}
-function closeDeleteConfirmation() {
-document.getElementById('deleteConfirmModal').classList.add('hidden');
-currentDeleteRow = null;
-}
-function confirmDelete() {
-if (currentDeleteRow) {
-const id = parseInt(currentDeleteRow.dataset.id);
-mockData.subscribers = mockData.subscribers.filter(s => s.id !== id);
-saveToLocalStorage();
-currentDeleteRow.remove();
-closeDeleteConfirmation();
-updateStats();
-const toast = document.createElement('div');
-toast.className = 'fixed top-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-toast.textContent = 'تم حذف المشترك بنجاح';
-document.body.appendChild(toast);
-setTimeout(() => {
-toast.remove();
-}, 3000);
-}
-}
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-e.preventDefault();
-const username = e.target.elements[0].value;
-const password = e.target.elements[1].value;
-if(username === 'xbnr' && password === '230793*') {
-document.getElementById('loginPage').classList.add('hidden');
-document.getElementById('dashboard').classList.remove('hidden');
-loadFromLocalStorage();
-} else {
-const errorToast = document.createElement('div');
-errorToast.className = 'fixed top-4 left-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-errorToast.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
-document.body.appendChild(errorToast);
-setTimeout(() => {
-errorToast.remove();
-}, 3000);
-}
-});
-document.getElementById('addSubscriberBtn').addEventListener('click', function() {
-document.getElementById('addSubscriberModal').classList.remove('hidden');
-});
-function closeModal() {
-document.getElementById('addSubscriberModal').classList.add('hidden');
-}
-document.getElementById('subscriberForm').addEventListener('submit', function(e) {
-e.preventDefault();
-const newSubscriber = {
-id: Date.now(),
-name: `${e.target.elements[0].value} ${e.target.elements[1].value}`,
-phone: e.target.elements[2].value,
-startDate: e.target.elements[3].value,
-endDate: e.target.elements[4].value,
-amount: parseInt(e.target.elements[5].value),
-status: 'active'
-};
-mockData.subscribers.push(newSubscriber);
-saveToLocalStorage();
-renderSubscribers();
-const toast = document.createElement('div');
-toast.className = 'fixed top-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-toast.textContent = 'تمت إضافة المشترك بنجاح';
-document.body.appendChild(toast);
-setTimeout(() => {
-toast.remove();
-}, 3000);
-e.target.reset();
-closeModal();
-});
-let syncStatus = false;
-document.addEventListener('click', function(e) {
-const userMenu = document.getElementById('userMenu');
-const userMenuBtn = document.getElementById('userMenuBtn');
-if (userMenuBtn.contains(e.target)) {
-userMenu.classList.toggle('hidden');
-} else if (!userMenu.contains(e.target)) {
-userMenu.classList.add('hidden');
-}
-});
-function logout() {
-document.getElementById('dashboard').classList.add('hidden');
-document.getElementById('loginPage').classList.remove('hidden');
-document.getElementById('userMenu').classList.add('hidden');
-const toast = document.createElement('div');
-toast.className = 'fixed top-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-toast.textContent = 'تم تسجيل الخروج بنجاح';
-document.body.appendChild(toast);
-setTimeout(() => {
-toast.remove();
-}, 3000);
-}
-function showProfileModal() {
-document.getElementById('profileModal').classList.remove('hidden');
-document.getElementById('userMenu').classList.add('hidden');
-document.getElementById('profileName').value = 'XBNR';
-document.getElementById('profileEmail').value = '93vmware@gmail.com';
-}
-function closeProfileModal() {
-document.getElementById('profileModal').classList.add('hidden');
-}
-function showPasswordModal() {
-document.getElementById('passwordModal').classList.remove('hidden');
-document.getElementById('userMenu').classList.add('hidden');
-}
-function closePasswordModal() {
-document.getElementById('passwordModal').classList.add('hidden');
-}
-document.getElementById('profileForm').addEventListener('submit', function(e) {
-e.preventDefault();
-const name = document.getElementById('profileName').value;
-const email = document.getElementById('profileEmail').value;
-const toast = document.createElement('div');
-toast.className = 'fixed top-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-toast.textContent = 'تم تحديث الملف الشخصي بنجاح';
-document.body.appendChild(toast);
-setTimeout(() => {
-toast.remove();
-}, 3000);
-closeProfileModal();
-});
-document.getElementById('passwordForm').addEventListener('submit', function(e) {
-e.preventDefault();
-const currentPassword = document.getElementById('currentPassword').value;
-const newPassword = document.getElementById('newPassword').value;
-const confirmPassword = document.getElementById('confirmPassword').value;
-if (currentPassword !== '230793*') {
-const errorToast = document.createElement('div');
-errorToast.className = 'fixed top-4 left-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-errorToast.textContent = 'كلمة المرور الحالية غير صحيحة';
-document.body.appendChild(errorToast);
-setTimeout(() => {
-errorToast.remove();
-}, 3000);
-return;
-}
-if (newPassword !== confirmPassword) {
-const errorToast = document.createElement('div');
-errorToast.className = 'fixed top-4 left-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-errorToast.textContent = 'كلمة المرور الجديدة غير متطابقة';
-document.body.appendChild(errorToast);
-setTimeout(() => {
-errorToast.remove();
-}, 3000);
-return;
-}
-const toast = document.createElement('div');
-toast.className = 'fixed top-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-toast.textContent = 'تم تغيير كلمة المرور بنجاح';
-document.body.appendChild(toast);
-setTimeout(() => {
-toast.remove();
-}, 3000);
-e.target.reset();
-closePasswordModal();
-});
-document.getElementById('syncBtn').addEventListener('click', function() {
-const btn = this;
-if(!syncStatus) {
-btn.classList.add('animate-spin');
-setTimeout(() => {
-btn.classList.remove('animate-spin');
-const toast = document.createElement('div');
-toast.className = 'fixed top-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
-toast.textContent = 'تمت المزامنة بنجاح';
-document.body.appendChild(toast);
-setTimeout(() => {
-toast.remove();
-}, 3000);
-}, 2000);
-}
-syncStatus = !syncStatus;
-});
-</script>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--gray-100);
+      color: var(--gray-900);
+      line-height: 1.5;
+    }
+
+    .min-h-screen {
+      min-height: 100vh;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .justify-center {
+      justify-content: center;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .justify-end {
+      justify-content: flex-end;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .bg-white {
+      background-color: white;
+    }
+
+    .bg-primary {
+      background-color: var(--primary);
+    }
+
+    .bg-accent {
+      background-color: var(--accent);
+    }
+
+    .bg-red-600 {
+      background-color: var(--red);
+    }
+
+    .bg-red-100 {
+      background-color: #fee2e2;
+    }
+
+    .bg-green-100 {
+      background-color: #dcfce7;
+    }
+
+    .bg-yellow-100 {
+      background-color: #fef3c7;
+    }
+
+    .bg-blue-100 {
+      background-color: #dbeafe;
+    }
+
+    .text-white {
+      color: white;
+    }
+
+    .text-primary {
+      color: var(--primary);
+    }
+
+    .text-accent {
+      color: var(--accent);
+    }
+
+    .text-gray-400 {
+      color: var(--gray-400);
+    }
+
+    .text-gray-500 {
+      color: var(--gray-500);
+    }
+
+    .text-gray-600 {
+      color: var(--gray-600);
+    }
+
+    .text-gray-700 {
+      color: var(--gray-700);
+    }
+
+    .text-gray-900 {
+      color: var(--gray-900);
+    }
+
+    .text-red-600 {
+      color: var(--red);
+    }
+
+    .text-green-600 {
+      color: var(--green);
+    }
+
+    .text-yellow-600 {
+      color: var(--yellow);
+    }
+
+    .text-red-800 {
+      color: #991b1b;
+    }
+
+    .text-green-800 {
+      color: #166534;
+    }
+
+    .text-yellow-800 {
+      color: #854d0e;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    .text-xs {
+      font-size: 0.75rem;
+    }
+
+    .text-lg {
+      font-size: 1.125rem;
+    }
+
+    .text-xl {
+      font-size: 1.25rem;
+    }
+
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+
+    .text-3xl {
+      font-size: 1.875rem;
+    }
+
+    .text-4xl {
+      font-size: 2.25rem;
+    }
+
+    .font-medium {
+      font-weight: 500;
+    }
+
+    .font-semibold {
+      font-weight: 600;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .font-extrabold {
+      font-weight: 800;
+    }
+
+    .uppercase {
+      text-transform: uppercase;
+    }
+
+    .tracking-wider {
+      letter-spacing: 0.05em;
+    }
+
+    .p-4 {
+      padding: 1rem;
+    }
+
+    .p-6 {
+      padding: 1.5rem;
+    }
+
+    .p-8 {
+      padding: 2rem;
+    }
+
+    .px-2 {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .px-3 {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+
+    .px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .px-6 {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .py-2 {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .py-3 {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+
+    .py-4 {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .py-8 {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    .pr-3 {
+      padding-right: 0.75rem;
+    }
+
+    .pr-10 {
+      padding-right: 2.5rem;
+    }
+
+    .pt-4 {
+      padding-top: 1rem;
+    }
+
+    .mb-1 {
+      margin-bottom: 0.25rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-8 {
+      margin-bottom: 2rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .mt-4 {
+      margin-top: 1rem;
+    }
+
+    .mt-8 {
+      margin-top: 2rem;
+    }
+
+    .mx-4 {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+
+    .mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .my-1 {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .space-y-4 > * + * {
+      margin-top: 1rem;
+    }
+
+    .space-y-6 > * + * {
+      margin-top: 1.5rem;
+    }
+
+    .space-x-2 {
+      margin-left: 0.5rem;
+    }
+
+    .space-x-3 {
+      margin-left: 0.75rem;
+    }
+
+    .space-x-4 {
+      margin-left: 1rem;
+    }
+
+    .space-x-reverse {
+      flex-direction: row-reverse;
+    }
+
+    .w-5 {
+      width: 1.25rem;
+    }
+
+    .w-6 {
+      width: 1.5rem;
+    }
+
+    .w-12 {
+      width: 3rem;
+    }
+
+    .w-48 {
+      width: 12rem;
+    }
+
+    .w-96 {
+      width: 24rem;
+    }
+
+    .w-full {
+      width: 100%;
+    }
+
+    .max-w-sm {
+      max-width: 24rem;
+    }
+
+    .max-w-md {
+      max-width: 28rem;
+    }
+
+    .max-w-7xl {
+      max-width: 80rem;
+    }
+
+    .h-5 {
+      height: 1.25rem;
+    }
+
+    .h-6 {
+      height: 1.5rem;
+    }
+
+    .h-12 {
+      height: 3rem;
+    }
+
+    .h-16 {
+      height: 4rem;
+    }
+
+    .rounded-lg {
+      border-radius: var(--border-radius);
+    }
+
+    .rounded-button {
+      border-radius: var(--border-radius);
+    }
+
+    .rounded-full {
+      border-radius: 9999px;
+    }
+
+    .border {
+      border: 1px solid var(--gray-300);
+    }
+
+    .border-b {
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .border-gray-200 {
+      border-color: var(--gray-200);
+    }
+
+    .border-gray-300 {
+      border-color: var(--gray-300);
+    }
+
+    .shadow {
+      box-shadow: var(--card-shadow);
+    }
+
+    .shadow-lg {
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .shadow-xl {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .grid {
+      display: grid;
+    }
+
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gap-4 {
+      gap: 1rem;
+    }
+
+    .gap-6 {
+      gap: 1.5rem;
+    }
+
+    .relative {
+      position: relative;
+    }
+
+    .absolute {
+      position: absolute;
+    }
+
+    .fixed {
+      position: fixed;
+    }
+
+    .inset-0 {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .inset-y-0 {
+      top: 0;
+      bottom: 0;
+    }
+
+    .right-0 {
+      right: 0;
+    }
+
+    .left-0 {
+      left: 0;
+    }
+
+    .top-4 {
+      top: 1rem;
+    }
+
+    .left-4 {
+      left: 1rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .z-50 {
+      z-index: 50;
+    }
+
+    .block {
+      display: block;
+    }
+
+    .inline-flex {
+      display: inline-flex;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .whitespace-nowrap {
+      white-space: nowrap;
+    }
+
+    .overflow-x-auto {
+      overflow-x: auto;
+    }
+
+    .divide-y > * + * {
+      border-top-width: 1px;
+    }
+
+    .divide-gray-200 > * + * {
+      border-color: var(--gray-200);
+    }
+
+    .bg-opacity-75 {
+      background-color: rgba(0, 0, 0, 0.75);
+    }
+
+    .transition-colors {
+      transition-property: color, background-color, border-color;
+      transition-duration: 150ms;
+    }
+
+    .transition-opacity {
+      transition-property: opacity;
+      transition-duration: 150ms;
+    }
+
+    .transition-transform {
+      transition-property: transform;
+      transition-duration: 150ms;
+    }
+
+    .transition-all {
+      transition-property: all;
+      transition-duration: 150ms;
+    }
+
+    .duration-300 {
+      transition-duration: 300ms;
+    }
+
+    .hover\:bg-primary-dark:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .hover\:bg-accent-dark:hover {
+      background-color: var(--accent-dark);
+    }
+
+    .hover\:bg-gray-50:hover {
+      background-color: var(--gray-50);
+    }
+
+    .hover\:bg-gray-100:hover {
+      background-color: var(--gray-100);
+    }
+
+    .hover\:bg-red-700:hover {
+      background-color: var(--red-hover);
+    }
+
+    .hover\:text-primary:hover {
+      color: var(--primary);
+    }
+
+    .hover\:text-accent:hover {
+      color: var(--accent);
+    }
+
+    .hover\:text-blue-900:hover {
+      color: #1e3a8a;
+    }
+
+    .hover\:text-red-900:hover {
+      color: #7f1d1d;
+    }
+
+    .hover\:underline:hover {
+      text-decoration: underline;
+    }
+
+    .hover\:shadow-lg:hover {
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .hover\:scale-105:hover {
+      transform: scale(1.05);
+    }
+
+    .focus\:ring-2:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+      outline: none;
+    }
+
+    .focus\:ring-primary:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    }
+
+    .focus\:border-primary:focus {
+      border-color: var(--primary);
+    }
+
+    .leading-5 {
+      line-height: 1.25rem;
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: .5;
+      }
+    }
+
+    .hide-arrows::-webkit-inner-spin-button,
+    .hide-arrows::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .hide-arrows {
+      -moz-appearance: textfield;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    /* Logo and branding */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      position: relative;
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo-text {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+    }
+
+    .logo-accent {
+      color: var(--accent);
+    }
+
+    /* Login page styling */
+    .login-container {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      left: -50px;
+      right: -50px;
+      bottom: -50px;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      z-index: -1;
+    }
+
+    .login-box {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+    }
+
+    .login-box:hover {
+      box-shadow: var(--card-shadow-hover);
+      transform: translateY(-5px);
+    }
+
+    /* Card styling */
+    .stat-card {
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border-top: 4px solid transparent;
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--card-shadow-hover);
+      transform: translateY(-5px);
+    }
+
+    .stat-card.total {
+      border-top-color: var(--primary);
+    }
+
+    .stat-card.active {
+      border-top-color: var(--green);
+    }
+
+    .stat-card.expired {
+      border-top-color: var(--red);
+    }
+
+    .stat-card.near-expiry {
+      border-top-color: var(--yellow);
+    }
+
+    /* Button styling */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-accent {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .btn-accent:hover {
+      background-color: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background-color: var(--red);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: var(--red-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--gray-100);
+      transform: translateY(-2px);
+    }
+
+    /* Data management buttons */
+    .data-management {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .data-management button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* File input styling */
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      color: white;
+      box-shadow: var(--card-shadow);
+      z-index: 100;
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    }
+
+    .toast-success {
+      background-color: var(--green);
+    }
+
+    .toast-error {
+      background-color: var(--red);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    /* Table styling */
+    .table-container {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    .table-header {
+      background-color: var(--gray-100);
+    }
+
+    .table-row:hover {
+      background-color: var(--gray-50);
+    }
+
+    /* Responsive design */
+    @media (min-width: 768px) {
+      .md\:grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 640px) {
+      .sm\:px-6 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\:px-8 {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="min-h-screen">
+    <div id="loginPage" class="min-h-screen flex items-center justify-center login-container">
+      <div class="login-box p-8 w-96">
+        <div class="text-center mb-8">
+          <div class="flex justify-center mb-4">
+            <!-- Bodybuilding Logo SVG -->
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="38" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-width="2"/>
+              <path d="M40 15C36.5 15 33.5 17 32 20C30.5 23 30.5 26 32 29C33.5 32 36.5 34 40 34C43.5 34 46.5 32 48 29C49.5 26 49.5 23 48 20C46.5 17 43.5 15 40 15Z" fill="#3b82f6"/>
+              <path d="M25 30C22.5 30 20.5 31.5 19.5 33.5C18.5 35.5 18.5 38 19.5 40C20.5 42 22.5 43.5 25 43.5C27.5 43.5 29.5 42 30.5 40C31.5 38 31.5 35.5 30.5 33.5C29.5 31.5 27.5 30 25 30Z" fill="#f97316"/>
+              <path d="M55 30C52.5 30 50.5 31.5 49.5 33.5C48.5 35.5 48.5 38 49.5 40C50.5 42 52.5 43.5 55 43.5C57.5 43.5 59.5 42 60.5 40C61.5 38 61.5 35.5 60.5 33.5C59.5 31.5 57.5 30 55 30Z" fill="#f97316"/>
+              <path d="M40 35C32 35 25 40 25 46V65H55V46C55 40 48 35 40 35Z" fill="#3b82f6"/>
+              <path d="M25 46C25 46 20 48 20 52V65H25V46Z" fill="#f97316"/>
+              <path d="M55 46C55 46 60 48 60 52V65H55V46Z" fill="#f97316"/>
+            </svg>
+          </div>
+          <h1 class="font-extrabold text-4xl mb-2">
+            <span class="text-primary">XBNR</span>
+            <span class="text-accent">GYM</span>
+          </h1>
+          <p class="mt-2 text-gray-600">نظام إدارة المشتركين</p>
+        </div>
+        <form id="loginForm" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">اسم المستخدم</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <input type="text" id="username" class="block w-full pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <input type="password" id="password" class="block w-full pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-full">تسجيل الدخول</button>
+          <div class="text-center">
+            <a href="#" class="text-sm text-primary hover:underline">نسيت كلمة المرور؟</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashboard" class="hidden">
+      <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex items-center">
+              <div class="logo-container">
+                <!-- Bodybuilding Logo SVG -->
+                <svg width="40" height="40" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo-icon">
+                  <circle cx="40" cy="40" r="38" fill="#3b82f6" fill-opacity="0.1" stroke="#3b82f6" stroke-width="2"/>
+                  <path d="M40 15C36.5 15 33.5 17 32 20C30.5 23 30.5 26 32 29C33.5 32 36.5 34 40 34C43.5 34 46.5 32 48 29C49.5 26 49.5 23 48 20C46.5 17 43.5 15 40 15Z" fill="#3b82f6"/>
+                  <path d="M25 30C22.5 30 20.5 31.5 19.5 33.5C18.5 35.5 18.5 38 19.5 40C20.5 42 22.5 43.5 25 43.5C27.5 43.5 29.5 42 30.5 40C31.5 38 31.5 35.5 30.5 33.5C29.5 31.5 27.5 30 25 30Z" fill="#f97316"/>
+                  <path d="M55 30C52.5 30 50.5 31.5 49.5 33.5C48.5 35.5 48.5 38 49.5 40C50.5 42 52.5 43.5 55 43.5C57.5 43.5 59.5 42 60.5 40C61.5 38 61.5 35.5 60.5 33.5C59.5 31.5 57.5 30 55 30Z" fill="#f97316"/>
+                  <path d="M40 35C32 35 25 40 25 46V65H55V46C55 40 48 35 40 35Z" fill="#3b82f6"/>
+                  <path d="M25 46C25 46 20 48 20 52V65H25V46Z" fill="#f97316"/>
+                  <path d="M55 46C55 46 60 48 60 52V65H55V46Z" fill="#f97316"/>
+                </svg>
+                <div class="logo-text">
+                  <span class="text-primary">XBNR</span>
+                  <span class="text-accent">GYM</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4 space-x-reverse">
+              <button id="syncBtn" class="text-gray-600 hover:text-primary transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+                </svg>
+              </button>
+              <div class="relative">
+                <button id="userMenuBtn" class="flex items-center space-x-3 space-x-reverse">
+                  <span class="text-gray-700">XBNR</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </button>
+                <div id="userMenu" class="hidden absolute left-0 mt-2 w-48 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div class="py-1">
+                    <button class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 space-x-reverse" onclick="showProfileModal()">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                      </svg>
+                      <span>تعديل الملف الشخصي</span>
+                    </button>
+                    <button class="block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 space-x-reverse" onclick="showPasswordModal()">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                      <span>تغيير كلمة المرور</span>
+                    </button>
+                    <hr class="my-1 border-gray-200">
+                    <button class="block w-full text-right px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2 space-x-reverse" onclick="logout()">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                      </svg>
+                      <span>تسجيل الخروج</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="stat-card total bg-white p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">إجمالي المشتركين</p>
+                <h3 id="total-subscribers" class="text-2xl font-semibold text-gray-900">0</h3>
+              </div>
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-card active bg-white p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">المشتركون النشطون</p>
+                <h3 id="active-subscribers" class="text-2xl font-semibold text-gray-900">0</h3>
+              </div>
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <polyline points="17 11 19 13 23 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-card expired bg-white p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">الاشتراكات المنتهية</p>
+                <h3 id="expired-subscribers" class="text-2xl font-semibold text-gray-900">0</h3>
+              </div>
+              <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <line x1="18" y1="8" x2="23" y2="13"></line>
+                  <line x1="23" y1="8" x2="18" y2="13"></line>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <div class="stat-card near-expiry bg-white p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">قرب انتهاء الاشتراك</p>
+                <h3 id="near-expiry-subscribers" class="text-2xl font-semibold text-gray-900">0</h3>
+              </div>
+              <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Management Buttons -->
+        <div class="bg-white rounded-lg shadow p-4 mb-8">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">إدارة البيانات</h3>
+          <div class="data-management">
+            <button id="exportDataBtn" class="btn btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>تصدير البيانات</span>
+            </button>
+            
+            <div class="file-input-wrapper">
+              <button id="importDataBtn" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span>استيراد البيانات</span>
+              </button>
+              <input type="file" id="importFileInput" accept=".json">
+            </div>
+            
+            <button id="backupDataBtn" class="btn btn-accent">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              <span>نسخ احتياطي</span>
+            </button>
+            
+            <button id="clearDataBtn" class="btn btn-danger">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>مسح البيانات</span>
+            </button>
+          </div>
+          <p class="text-sm text-gray-600 mt-2">* يتم حفظ البيانات تلقائيًا كل 5 دقائق</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow table-container">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div class="flex-1">
+                <div class="relative">
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                  </div>
+                  <input type="text" id="searchInput" placeholder="بحث عن مشترك..." class="block w-full pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary">
+                </div>
+              </div>
+              
+              <div class="flex items-center space-x-4 space-x-reverse">
+                <select id="statusFilter" class="pr-10 py-2 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary">
+                  <option value="all">جميع المشتركين</option>
+                  <option value="active">النشطون</option>
+                  <option value="expired">المنتهية اشتراكاتهم</option>
+                </select>
+                
+                <button id="addSubscriberBtn" class="btn btn-accent">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  <span>إضافة مشترك</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="table-header">
+                <tr>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الاسم</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم الهاتف</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ البداية</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ النهاية</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="subscribersTableBody" class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                    لا يوجد مشتركين
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="addSubscriberModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">إضافة مشترك جديد</h3>
+        </div>
+        <form id="subscriberForm" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
+            <input type="text" id="firstName" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">اللقب</label>
+            <input type="text" id="lastName" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
+            <input type="tel" id="phone" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary hide-arrows" required>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">تاريخ البداية</label>
+              <input type="date" id="startDate" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">تاريخ النهاية</label>
+              <input type="date" id="endDate" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">المبلغ</label>
+            <input type="number" id="amount" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary hide-arrows" required>
+          </div>
+          <div class="flex justify-end space-x-3 space-x-reverse pt-4">
+            <button type="button" id="cancelAddBtn" class="btn btn-outline">إلغاء</button>
+            <button type="submit" class="btn btn-primary">حفظ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="profileModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">تعديل الملف الشخصي</h3>
+        </div>
+        <form id="profileForm" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
+            <input type="text" id="profileName" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" value="XBNR" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">البريد الإلكتروني</label>
+            <input type="email" id="profileEmail" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" value="93vmware@gmail.com" required>
+          </div>
+          <div class="flex justify-end space-x-3 space-x-reverse pt-4">
+            <button type="button" id="cancelProfileBtn" class="btn btn-outline">إلغاء</button>
+            <button type="submit" class="btn btn-primary">حفظ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="passwordModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">تغيير كلمة المرور</h3>
+        </div>
+        <form id="passwordForm" class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور الحالية</label>
+            <input type="password" id="currentPassword" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">كلمة المرور الجديدة</label>
+            <input type="password" id="newPassword" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">تأكيد كلمة المرور الجديدة</label>
+            <input type="password" id="confirmPassword" class="block w-full py-2 px-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary focus:border-primary" required>
+          </div>
+          <div class="flex justify-end space-x-3 space-x-reverse pt-4">
+            <button type="button" id="cancelPasswordBtn" class="btn btn-outline">إلغاء</button>
+            <button type="submit" class="btn btn-primary">حفظ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-sm w-full mx-4">
+        <div class="px-6 py-4">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">هل أنت متأكد من حذف هذا المشترك؟</h3>
+          <div class="flex justify-end space-x-3 space-x-reverse">
+            <button type="button" id="cancelDeleteBtn" class="btn btn-outline">إلغاء</button>
+            <button type="button" id="confirmDeleteBtn" class="btn btn-danger">تأكيد الحذف</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="clearDataConfirmModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-sm w-full mx-4">
+        <div class="px-6 py-4">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">هل أنت متأكد من مسح جميع البيانات؟</h3>
+          <p class="text-gray-600 mb-4">سيتم حذف جميع المشتركين وبياناتهم بشكل نهائي.</p>
+          <div class="flex justify-end space-x-3 space-x-reverse">
+            <button type="button" id="cancelClearBtn" class="btn btn-outline">إلغاء</button>
+            <button type="button" id="confirmClearBtn" class="btn btn-danger">تأكيد المسح</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data model
+    const subscriberData = {
+      subscribers: []
+    };
+
+    // DOM Elements
+    const loginPage = document.getElementById('loginPage');
+    const dashboard = document.getElementById('dashboard');
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userMenu = document.getElementById('userMenu');
+    const syncBtn = document.getElementById('syncBtn');
+    const addSubscriberBtn = document.getElementById('addSubscriberBtn');
+    const addSubscriberModal = document.getElementById('addSubscriberModal');
+    const subscriberForm = document.getElementById('subscriberForm');
+    const cancelAddBtn = document.getElementById('cancelAddBtn');
+    const profileModal = document.getElementById('profileModal');
+    const profileForm = document.getElementById('profileForm');
+    const cancelProfileBtn = document.getElementById('cancelProfileBtn');
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordForm = document.getElementById('passwordForm');
+    const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+    const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const subscribersTableBody = document.getElementById('subscribersTableBody');
+    
+    // Data management elements
+    const exportDataBtn = document.getElementById('exportDataBtn');
+    const importDataBtn = document.getElementById('importDataBtn');
+    const importFileInput = document.getElementById('importFileInput');
+    const backupDataBtn = document.getElementById('backupDataBtn');
+    const clearDataBtn = document.getElementById('clearDataBtn');
+    const clearDataConfirmModal = document.getElementById('clearDataConfirmModal');
+    const cancelClearBtn = document.getElementById('cancelClearBtn');
+    const confirmClearBtn = document.getElementById('confirmClearBtn');
+    
+    // Stats elements
+    const totalSubscribersEl = document.getElementById('total-subscribers');
+    const activeSubscribersEl = document.getElementById('active-subscribers');
+    const expiredSubscribersEl = document.getElementById('expired-subscribers');
+    const nearExpirySubscribersEl = document.getElementById('near-expiry-subscribers');
+
+    // Current state
+    let currentSubscriberToDelete = null;
+    let isLoggedIn = false;
+    let autoSaveInterval = null;
+
+    // Check if user is logged in
+    function checkLoginStatus() {
+      const loggedInStatus = localStorage.getItem('isLoggedIn');
+      if (loggedInStatus === 'true') {
+        isLoggedIn = true;
+        showDashboard();
+      }
+    }
+
+    // Show dashboard
+    function showDashboard() {
+      loginPage.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      loadSubscribers();
+      startAutoSave();
+    }
+
+    // Start auto-save
+    function startAutoSave() {
+      // Auto-save every 5 minutes
+      autoSaveInterval = setInterval(() => {
+        saveSubscribers();
+        // Create a backup in a different key
+        localStorage.setItem('subscriberData_backup', JSON.stringify(subscriberData));
+        console.log('Auto-saved data at', new Date().toLocaleTimeString());
+      }, 5 * 60 * 1000); // 5 minutes
+    }
+
+    // Stop auto-save
+    function stopAutoSave() {
+      if (autoSaveInterval) {
+        clearInterval(autoSaveInterval);
+        autoSaveInterval = null;
+      }
+    }
+
+    // Load subscribers from localStorage
+    function loadSubscribers() {
+      const data = localStorage.getItem('subscriberData');
+      if (data) {
+        try {
+          const parsedData = JSON.parse(data);
+          subscriberData.subscribers = parsedData.subscribers || [];
+        } catch (error) {
+          console.error('Error parsing subscriber data:', error);
+          
+          // Try to load from backup
+          const backupData = localStorage.getItem('subscriberData_backup');
+          if (backupData) {
+            try {
+              const parsedBackupData = JSON.parse(backupData);
+              subscriberData.subscribers = parsedBackupData.subscribers || [];
+              showToast('تم استعادة البيانات من النسخة الاحتياطية');
+            } catch (backupError) {
+              console.error('Error parsing backup data:', backupError);
+              subscriberData.subscribers = [];
+            }
+          } else {
+            subscriberData.subscribers = [];
+          }
+        }
+      }
+      renderSubscribers();
+      updateStats();
+    }
+
+    // Save subscribers to localStorage
+    function saveSubscribers() {
+      localStorage.setItem('subscriberData', JSON.stringify(subscriberData));
+    }
+
+    // Export data to JSON file
+    function exportData() {
+      const dataStr = JSON.stringify(subscriberData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `gym_subscribers_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      showToast('تم تصدير البيانات بنجاح');
+    }
+
+    // Import data from JSON file
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          
+          if (importedData && Array.isArray(importedData.subscribers)) {
+            // Create a backup before importing
+            localStorage.setItem('subscriberData_backup_before_import', JSON.stringify(subscriberData));
+            
+            subscriberData.subscribers = importedData.subscribers;
+            saveSubscribers();
+            renderSubscribers();
+            updateStats();
+            showToast('تم استيراد البيانات بنجاح');
+          } else {
+            showToast('ملف غير صالح. يجب أن يحتوي على مصفوفة subscribers', true);
+          }
+        } catch (error) {
+          console.error('Error importing data:', error);
+          showToast('حدث خطأ أثناء استيراد البيانات', true);
+        }
+        
+        // Reset the file input
+        event.target.value = '';
+      };
+      
+      reader.readAsText(file);
+    }
+
+    // Create backup
+    function createBackup() {
+      // Create a backup with timestamp
+      const timestamp = new Date().toISOString();
+      const backupKey = `subscriberData_backup_${timestamp}`;
+      localStorage.setItem(backupKey, JSON.stringify(subscriberData));
+      
+      // Store the list of backups
+      let backups = JSON.parse(localStorage.getItem('backupsList') || '[]');
+      backups.push({ key: backupKey, timestamp });
+      
+      // Keep only the last 10 backups
+      if (backups.length > 10) {
+        const oldestBackup = backups.shift();
+        localStorage.removeItem(oldestBackup.key);
+      }
+      
+      localStorage.setItem('backupsList', JSON.stringify(backups));
+      showToast('تم إنشاء نسخة احتياطية بنجاح');
+    }
+
+    // Clear all data
+    function clearAllData() {
+      // Create a final backup before clearing
+      localStorage.setItem('subscriberData_backup_before_clear', JSON.stringify(subscriberData));
+      
+      subscriberData.subscribers = [];
+      saveSubscribers();
+      renderSubscribers();
+      updateStats();
+      closeClearDataConfirmation();
+      showToast('تم مسح جميع البيانات بنجاح');
+    }
+
+    // Render subscribers table
+    function renderSubscribers() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filterValue = statusFilter.value;
+      
+      const filteredSubscribers = subscriberData.subscribers.filter(sub => {
+        const matchesStatus = 
+          filterValue === "all" || 
+          (filterValue === "active" && sub.status === "active") ||
+          (filterValue === "expired" && sub.status === "expired");
+        
+        const matchesSearch = 
+          sub.name.toLowerCase().includes(searchTerm) ||
+          sub.phone.includes(searchTerm);
+        
+        return matchesStatus && matchesSearch;
+      });
+
+      if (filteredSubscribers.length === 0) {
+        subscribersTableBody.innerHTML = `
+          <tr class="table-row">
+            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+              لا يوجد مشتركين
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      subscribersTableBody.innerHTML = '';
+      
+      filteredSubscribers.forEach(subscriber => {
+        const endDate = new Date(subscriber.endDate);
+        const today = new Date();
+        const diffDays = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        const isNearExpiry = subscriber.status === 'active' && diffDays <= 30 && diffDays > 0;
+        
+        const tr = document.createElement('tr');
+        tr.className = 'table-row';
+        tr.innerHTML = `
+          <td class="px-6 py-4 whitespace-nowrap">${subscriber.name}</td>
+          <td class="px-6 py-4 whitespace-nowrap">${subscriber.phone}</td>
+          <td class="px-6 py-4 whitespace-nowrap">${subscriber.startDate}</td>
+          <td class="px-6 py-4 whitespace-nowrap ${isNearExpiry ? 'text-yellow-600 font-medium' : ''}">
+            ${subscriber.endDate}
+            ${isNearExpiry ? ` (متبقي ${diffDays} يوم)` : ''}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">${subscriber.amount} دينار جزائري</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+              subscriber.status === 'active' 
+                ? isNearExpiry 
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-green-100 text-green-800' 
+                : 'bg-red-100 text-red-800'
+            }">
+              ${subscriber.status === 'active' ? (isNearExpiry ? 'قرب الانتهاء' : 'نشط') : 'منتهي'}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <div class="flex space-x-2 space-x-reverse">
+              <button class="text-primary hover:text-primary-dark transition-colors cursor-pointer edit-btn" data-id="${subscriber.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="text-red-600 hover:text-red-900 transition-colors cursor-pointer delete-btn" data-id="${subscriber.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </td>
+        `;
+        subscribersTableBody.appendChild(tr);
+      });
+
+      // Add event listeners to delete buttons
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = parseInt(this.getAttribute('data-id'));
+          showDeleteConfirmation(id);
+        });
+      });
+    }
+
+    // Update statistics
+    function updateStats() {
+      const total = subscriberData.subscribers.length;
+      const active = subscriberData.subscribers.filter(s => s.status === 'active').length;
+      const expired = subscriberData.subscribers.filter(s => s.status === 'expired').length;
+      const nearExpiry = subscriberData.subscribers.filter(s => {
+        if (s.status === 'active') {
+          const endDate = new Date(s.endDate);
+          const today = new Date();
+          const diffDays = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+          return diffDays <= 30 && diffDays > 0;
+        }
+        return false;
+      }).length;
+
+      totalSubscribersEl.textContent = total;
+      activeSubscribersEl.textContent = active;
+      expiredSubscribersEl.textContent = expired;
+      nearExpirySubscribersEl.textContent = nearExpiry;
+    }
+
+    // Show toast notification
+    function showToast(message, isError = false) {
+      const toast = document.createElement('div');
+      toast.className = `toast ${isError ? 'toast-error' : 'toast-success'}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // Show delete confirmation modal
+    function showDeleteConfirmation(id) {
+      currentSubscriberToDelete = id;
+      deleteConfirmModal.classList.remove('hidden');
+    }
+
+    // Close delete confirmation modal
+    function closeDeleteConfirmation() {
+      deleteConfirmModal.classList.add('hidden');
+      currentSubscriberToDelete = null;
+    }
+
+    // Show clear data confirmation modal
+    function showClearDataConfirmation() {
+      clearDataConfirmModal.classList.remove('hidden');
+    }
+
+    // Close clear data confirmation modal
+    function closeClearDataConfirmation() {
+      clearDataConfirmModal.classList.add('hidden');
+    }
+
+    // Confirm delete subscriber
+    function confirmDelete() {
+      if (currentSubscriberToDelete !== null) {
+        subscriberData.subscribers = subscriberData.subscribers.filter(s => s.id !== currentSubscriberToDelete);
+        saveSubscribers();
+        renderSubscribers();
+        updateStats();
+        closeDeleteConfirmation();
+        showToast('تم حذف المشترك بنجاح');
+      }
+    }
+
+    // Show profile modal
+    function showProfileModal() {
+      profileModal.classList.remove('hidden');
+      userMenu.classList.add('hidden');
+    }
+
+    // Close profile modal
+    function closeProfileModal() {
+      profileModal.classList.add('hidden');
+    }
+
+    // Show password modal
+    function showPasswordModal() {
+      passwordModal.classList.remove('hidden');
+      userMenu.classList.add('hidden');
+    }
+
+    // Close password modal
+    function closePasswordModal() {
+      passwordModal.classList.add('hidden');
+    }
+
+    // Show add subscriber modal
+    function showAddSubscriberModal() {
+      addSubscriberModal.classList.remove('hidden');
+      subscriberForm.reset();
+      
+      // Set default dates
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('startDate').value = today;
+      
+      // Set default end date to 30 days from now
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 30);
+      document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+    }
+
+    // Close add subscriber modal
+    function closeAddSubscriberModal() {
+      addSubscriberModal.classList.add('hidden');
+    }
+
+    // Logout
+    function logout() {
+      isLoggedIn = false;
+      localStorage.removeItem('isLoggedIn');
+      dashboard.classList.add('hidden');
+      loginPage.classList.remove('hidden');
+      userMenu.classList.add('hidden');
+      stopAutoSave();
+      showToast('تم تسجيل الخروج بنجاح');
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      checkLoginStatus();
+      
+      // Login form submission
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        
+        if (username === 'xbnr' && password === '230793*') {
+          isLoggedIn = true;
+          localStorage.setItem('isLoggedIn', 'true');
+          showDashboard();
+        } else {
+          showToast('اسم المستخدم أو كلمة المرور غير صحيحة', true);
+        }
+      });
+      
+      // User menu toggle
+      userMenuBtn.addEventListener('click', function() {
+        userMenu.classList.toggle('hidden');
+      });
+      
+      // Close user menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+          userMenu.classList.add('hidden');
+        }
+      });
+      
+      // Sync button
+      syncBtn.addEventListener('click', function() {
+        this.classList.add('animate-spin');
+        setTimeout(() => {
+          this.classList.remove('animate-spin');
+          saveSubscribers();
+          showToast('تمت المزامنة بنجاح');
+        }, 2000);
+      });
+      
+      // Add subscriber button
+      addSubscriberBtn.addEventListener('click', showAddSubscriberModal);
+      
+      // Cancel add subscriber
+      cancelAddBtn.addEventListener('click', closeAddSubscriberModal);
+      
+      // Subscriber form submission
+      subscriberForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const newSubscriber = {
+          id: Date.now(),
+          name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+          phone: document.getElementById('phone').value,
+          startDate: document.getElementById('startDate').value,
+          endDate: document.getElementById('endDate').value,
+          amount: parseInt(document.getElementById('amount').value),
+          status: 'active'
+        };
+        
+        subscriberData.subscribers.push(newSubscriber);
+        saveSubscribers();
+        renderSubscribers();
+        updateStats();
+        closeAddSubscriberModal();
+        showToast('تمت إضافة المشترك بنجاح');
+      });
+      
+      // Profile form submission
+      profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showToast('تم تحديث الملف الشخصي بنجاح');
+        closeProfileModal();
+      });
+      
+      // Cancel profile edit
+      cancelProfileBtn.addEventListener('click', closeProfileModal);
+      
+      // Password form submission
+      passwordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (currentPassword !== '230793*') {
+          showToast('كلمة المرور الحالية غير صحيحة', true);
+          return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+          showToast('كلمة المرور الجديدة غير متطابقة', true);
+          return;
+        }
+        
+        showToast('تم تغيير كلمة المرور بنجاح');
+        closePasswordModal();
+        passwordForm.reset();
+      });
+      
+      // Cancel password change
+      cancelPasswordBtn.addEventListener('click', closePasswordModal);
+      
+      // Cancel delete
+      cancelDeleteBtn.addEventListener('click', closeDeleteConfirmation);
+      
+      // Confirm delete
+      confirmDeleteBtn.addEventListener('click', confirmDelete);
+      
+      // Search input
+      searchInput.addEventListener('input', renderSubscribers);
+      
+      // Status filter
+      statusFilter.addEventListener('change', renderSubscribers);
+      
+      // Export data
+      exportDataBtn.addEventListener('click', exportData);
+      
+      // Import data
+      importFileInput.addEventListener('change', importData);
+      
+      // Backup data
+      backupDataBtn.addEventListener('click', createBackup);
+      
+      // Clear data button
+      clearDataBtn.addEventListener('click', showClearDataConfirmation);
+      
+      // Cancel clear data
+      cancelClearBtn.addEventListener('click', closeClearDataConfirmation);
+      
+      // Confirm clear data
+      confirmClearBtn.addEventListener('click', clearAllData);
+      
+      // Check for expired subscriptions on load
+      checkExpiredSubscriptions();
+    });
+
+    // Check for expired subscriptions
+    function checkExpiredSubscriptions() {
+      const today = new Date();
+      let updated = false;
+      
+      subscriberData.subscribers.forEach(subscriber => {
+        const endDate = new Date(subscriber.endDate);
+        if (subscriber.status === 'active' && endDate < today) {
+          subscriber.status = 'expired';
+          updated = true;
+        }
+      });
+      
+      if (updated) {
+        saveSubscribers();
+        renderSubscribers();
+        updateStats();
+      }
+    }
+  </script>
 </body>
 </html>
